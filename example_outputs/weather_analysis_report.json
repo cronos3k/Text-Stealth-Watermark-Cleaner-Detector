@@ -1,0 +1,150 @@
+{
+    "metadata": {
+        "timestamp": "2025-04-22T08:59:18.921761",
+        "original_size": 2807,
+        "input_filename": "weather_watermarked.txt"
+    },
+    "summary": {
+        "invisible_chars": 10,
+        "ascii_control_chars": 0,
+        "non_standard_whitespace": 1,
+        "excessive_whitespace_sequences": 6,
+        "normalized_chars": 2,
+        "total_anomalies_found": 19
+    },
+    "details": {
+        "invisible_chars": [
+            {
+                "index": 60,
+                "char": "⁠",
+                "codepoint": "U+2060",
+                "description": "Known invisible/formatting character"
+            },
+            {
+                "index": 71,
+                "char": "⁠",
+                "codepoint": "U+2060",
+                "description": "Known invisible/formatting character"
+            },
+            {
+                "index": 115,
+                "char": "­",
+                "codepoint": "U+00AD",
+                "description": "Known invisible/formatting character"
+            },
+            {
+                "index": 178,
+                "char": "⁠",
+                "codepoint": "U+2060",
+                "description": "Known invisible/formatting character"
+            },
+            {
+                "index": 1622,
+                "char": "­",
+                "codepoint": "U+00AD",
+                "description": "Known invisible/formatting character"
+            },
+            {
+                "index": 1998,
+                "char": "⁠",
+                "codepoint": "U+2060",
+                "description": "Known invisible/formatting character"
+            },
+            {
+                "index": 2213,
+                "char": "⁠",
+                "codepoint": "U+2060",
+                "description": "Known invisible/formatting character"
+            },
+            {
+                "index": 2272,
+                "char": "­",
+                "codepoint": "U+00AD",
+                "description": "Known invisible/formatting character"
+            },
+            {
+                "index": 2378,
+                "char": "­",
+                "codepoint": "U+00AD",
+                "description": "Known invisible/formatting character"
+            },
+            {
+                "index": 2710,
+                "char": "⁠",
+                "codepoint": "U+2060",
+                "description": "Known invisible/formatting character"
+            }
+        ],
+        "ascii_control_chars": [],
+        "non_standard_whitespace": [
+            {
+                "index": 1202,
+                "char": "'\\u2009'",
+                "codepoint": "U+2009",
+                "description": "Non-standard whitespace character"
+            }
+        ],
+        "excessive_whitespace_sequences": [
+            {
+                "start_index": 452,
+                "end_index": 454,
+                "sequence": "'\\n\\n'",
+                "length": 2,
+                "description": "Sequence of multiple whitespace characters"
+            },
+            {
+                "start_index": 531,
+                "end_index": 533,
+                "sequence": "'  '",
+                "length": 2,
+                "description": "Sequence of multiple whitespace characters"
+            },
+            {
+                "start_index": 909,
+                "end_index": 911,
+                "sequence": "'\\n\\n'",
+                "length": 2,
+                "description": "Sequence of multiple whitespace characters"
+            },
+            {
+                "start_index": 1328,
+                "end_index": 1331,
+                "sequence": "' \\n\\n'",
+                "length": 3,
+                "description": "Sequence of multiple whitespace characters"
+            },
+            {
+                "start_index": 1690,
+                "end_index": 1692,
+                "sequence": "'\\n\\n'",
+                "length": 2,
+                "description": "Sequence of multiple whitespace characters"
+            },
+            {
+                "start_index": 2211,
+                "end_index": 2213,
+                "sequence": "'\\n\\n'",
+                "length": 2,
+                "description": "Sequence of multiple whitespace characters"
+            }
+        ],
+        "normalized_chars": [
+            {
+                "index": 92,
+                "original_char": "𝑡",
+                "original_codepoint": "U+1D461",
+                "normalized_char": "t",
+                "normalized_codepoint": "U+0074",
+                "description": "Character changed by NFKC normalization (potential homoglyph or compatibility char)"
+            },
+            {
+                "index": 2409,
+                "original_char": "‑",
+                "original_codepoint": "U+2011",
+                "normalized_char": "‐",
+                "normalized_codepoint": "U+2010",
+                "description": "Character changed by NFKC normalization (potential homoglyph or compatibility char)"
+            }
+        ]
+    }
+}
