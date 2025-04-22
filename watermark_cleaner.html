@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Online tool to detect and remove hidden watermarks (invisible Unicode characters, whitespace patterns, homoglyphs) from AI-generated text. Clean your text for privacy, integrity, and safety.">
+    <meta name="keywords" content="AI watermark removal, text cleaning, Unicode watermark detector, hidden text, zero-width space, ZWSP remover, text privacy, AI safety, LLM output sanitization, homoglyph detection, text analysis tool, content integrity">
+    <meta name="author" content="Text Stealth Watermark Cleaner Project"> <!-- Or your name/org -->
+
+    <title>AI Text Stealth Watermark Cleaner & Detector</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            line-height: 1.6;
+            margin: 0;
+            background-color: #f8f9fa;
+            color: #343a40;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 1300px; /* Slightly wider for side-by-side */
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+        h1, h2 {
+            color: #0056b3;
+            margin-top: 0;
+            margin-bottom: 0.75em;
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 0.3em;
+        }
+        h1 {
+             font-size: 1.8em;
+        }
+        h2 {
+            font-size: 1.4em;
+            margin-top: 1.5em;
+        }
+        textarea {
+            width: 98%; /* Allow slight padding */
+            min-height: 200px; /* Taller text areas */
+            padding: 12px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            resize: vertical;
+            background-color: #f8f9fa; /* Light background for inputs */
+        }
+        textarea[readonly] {
+            background-color: #e9ecef; /* Slightly darker for readonly */
+            cursor: default;
+        }
+        button, .file-input-label {
+            padding: 10px 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            margin-right: 10px; /* Spacing between buttons */
+            margin-bottom: 10px; /* Spacing below buttons */
+            display: inline-block; /* Align buttons horizontally */
+        }
+        button:hover, .file-input-label:hover {
+            background-color: #0056b3;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        button#processButton {
+            background-color: #28a745; /* Green for primary action */
+            font-weight: bold;
+        }
+        button#processButton:hover {
+            background-color: #218838;
+        }
+        button#demoButton {
+             background-color: #ffc107; /* Yellow for demo */
+             color: #333;
+        }
+         button#demoButton:hover {
+             background-color: #e0a800;
+        }
+        label {
+            display: block;
+            font-weight: 600; /* Semi-bold labels */
+            margin-bottom: 8px;
+            font-size: 0.95em;
+            color: #495057;
+        }
+        .input-controls {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        /* Style the file input to look like a button */
+        input[type="file"] {
+            display: none; /* Hide the default ugly input */
+        }
+        .file-input-label {
+            border: 1px solid #007bff;
+            background-color: #f8f9fa;
+            color: #007bff;
+        }
+         .file-input-label:hover {
+             background-color: #e2e6ea;
+             color: #0056b3;
+             border-color: #0056b3;
+        }
+        #fileNameDisplay {
+             display: inline-block;
+             margin-left: 10px;
+             font-style: italic;
+             color: #6c757d;
+             font-size: 0.9em;
+        }
+
+        .output-section {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+        }
+        #reportOutput {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            min-height: 150px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            font-size: 0.85em; /* Slightly smaller for dense report */
+            margin-bottom: 15px;
+            max-height: 500px; /* Limit report height */
+            overflow-y: auto; /* Add scrollbar if needed */
+        }
+        #reportOutput h3, #reportOutput h4 {
+            margin-top: 1.2em;
+            margin-bottom: 0.6em;
+            font-size: 1.1em;
+            color: #495057;
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 4px;
+        }
+         #reportOutput h4 {
+             font-size: 1.0em;
+             border-bottom-style: dotted;
+             color: #6c757d;
+         }
+        #reportOutput ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin-top: 0.5em;
+        }
+        #reportOutput li {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+            line-height: 1.5;
+        }
+         #reportOutput li:last-child {
+            border-bottom: none;
+        }
+        #reportOutput code {
+            background-color: #e0e0e0;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.95em;
+            color: #333;
+        }
+         #reportOutput strong {
+             color: #0056b3;
+         }
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two equal columns */
+            gap: 25px; /* Gap between columns */
+            margin-top: 15px;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #6c757d;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+        .footer a {
+            color: #0056b3;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        /* Responsive adjustments */
+        @media (max-width: 900px) {
+            .grid-container {
+                grid-template-columns: 1fr; /* Stack columns */
+            }
+             textarea {
+                 min-height: 150px; /* Reduce height on smaller screens */
+             }
+        }
+         @media (max-width: 600px) {
+             body { padding: 10px; }
+             .container { padding: 20px; }
+             h1 { font-size: 1.6em; }
+             h2 { font-size: 1.3em; }
+             button, .file-input-label { width: calc(50% - 5px); margin-right: 5px; font-size: 0.9em; } /* Adjust button sizes */
+             button:last-of-type { margin-right: 0; }
+             .input-controls button, .input-controls .file-input-label { width: auto; } /* Let action buttons be natural width */
+
+         }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AI Text Stealth Watermark Cleaner & Detector</h1>
+        <p>Analyze and clean text potentially containing hidden tracking watermarks used by some AI systems. Supports invisible Unicode characters, whitespace patterns, and homoglyphs detection.</p>
+
+        <div class="input-controls">
+            <label for="fileInput" class="file-input-label">Upload Text File (.txt)</label>
+            <input type="file" id="fileInput" accept=".txt,text/plain">
+            <span id="fileNameDisplay">No file selected</span>
+
+            <button id="demoButton">Load Demo Text</button>
+        </div>
+
+        <label for="inputText">Input Text (Paste here or Upload):</label>
+        <textarea id="inputText" placeholder="Paste text here or upload a .txt file..."></textarea>
+
+        <button id="processButton">Analyze and Clean Text</button>
+
+        <div class="grid-container">
+            <div>
+                <label for="outputText">Cleaned Text:</label>
+                <textarea id="outputText" readonly placeholder="Cleaned text will appear here..."></textarea>
+            </div>
+            <div>
+                <label for="jsonOutput">Analysis (JSON Format):</label>
+                <textarea id="jsonOutput" readonly placeholder="Detailed JSON report will appear here..."></textarea>
+            </div>
+        </div>
+
+
+        <div class="output-section">
+            <h2>Analysis Report</h2>
+            <div id="reportOutput">Analysis results will appear here after processing...</div>
+        </div>
+
+        <div class="footer">
+            <p>Help improve this tool or learn more:</p>
+            <a href="https://github.com/cronos3k/Text-Stealth-Watermark-Cleaner-Detector" target="_blank" rel="noopener noreferrer">
+                View Project on GitHub
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // --- Configuration ---
+        const INVISIBLE_CHARS_TO_REMOVE = new Set([
+            '\u200B','\u200C','\u200D','\u2060','\u00AD','\u200E','\u200F','\u202A',
+            '\u202B','\u202C','\u202D','\u202E','\u2061','\u2062','\u2063','\u2064','\uFEFF'
+        ]);
+        const ASCII_CONTROL_CHARS_TO_REMOVE = new Set();
+        for (let i = 0; i < 0x20; i++) {
+            if (!['\t', '\n', '\r'].includes(String.fromCharCode(i))) {
+                ASCII_CONTROL_CHARS_TO_REMOVE.add(String.fromCharCode(i));
+            }
+        }
+        ASCII_CONTROL_CHARS_TO_REMOVE.add(String.fromCharCode(0x7F)); // DEL
+        const EXCESSIVE_WHITESPACE_REGEX = /\s{2,}/g;
+        const WHITESPACE_NORMALIZATION_REGEX = /\s+/g;
+        const STANDARD_WHITESPACE = new Set([' ', '\t', '\n', '\r', '\u00A0']);
+
+        // --- Demo Text ---
+        const DEMO_TEXT = `﻿Wеather patterns across the Nоrth Αtlantic Ocean are cоmplex⁠and highly⁠variable, significan𝑡ly influencing the cli­mate systems оf Eurоpe, North America, and even parts оf North⁠Africa. A dоminant factоr is the North Atlantic Oscillation (NΑO)—а large-scаle atmospheric pressure fluctuation between the subtropical high-pressure system near the Αzores and the lоw-pressure ZWNJ-system near Iceland. These variations dictate much of the winter weather.
+
+During a positive NΑO phase, both pressure centers are strоnger than average.  This results in a steeper pressure gradient, accelerating the westerly jet stream across the Αtlantic. Cоnsequently, Northern Eurоpe tends tо experience milder, wetter winters, while Sоuthern Eurоpe and the Mediterranean often see drier cоnditions. Conversely, Greenland and nоrtheastern Canada might face colder temperatures and increased storminess. It's a delicate balance.
+
+The negative NΑO phase features weaker pressure systems and a weaker, mоre meandering jet stream. This configuration often allows cоld Arctic air tо penetrate further south into Eurоpe, leading to colder, drier winters in the nоrth, while Southern Eurоpe may receive increased precipitation. Storm tracks are frequently shifted sоuthward during these periods. Understanding this phase is key for lоng–range forecasts.
+
+Beyond the NAO, the Atlantic Meridional Overturning Circulation (AMOC), including the powerful Gulf Stream, plays a vital rоle by transpоrting vast amounts of heat northward from the tropics. Variations in ΑMOC strength can have profound and long—term impacts on regional and even glоbal cli­mate dynamics, although these changes occur over longer timescales.
+
+Seasonal hurricane activity is another defining characteristic, primarily occurring between June and November. These intense tropical cyclоnes originate over warm ocean waters. They often track westward towards the Caribbean and Nоrth\u2060America, sometimes recurving nоrtheastward into the open Αtlantic.⁠These storms can pose significant risks tо shipping and coastal areas, and occasionally transition into potent extratropical stоrms affecting Western\x0B Eurоpe. Prediction requires constant satellite monitoring.
+
+⁠Predicting these intricate patterns involves highly sophis­ticated computer models.\x07 These models analyze vast datasets, including sea surface temperatures, atmo­spheric pressure fields, upper‑level winds, and the complex interactions between the ocean and the atmosphere. Accurate understanding and forecasting оf Nоrth Αtlantic weather are crucial for numerous sectors, from agriculture and energy tо transportation and disaster preparedness across multiple continents. This text has ZWSP ->⁠<- here. `;
+
+
+        // --- DOM References ---
+        const inputTextElem = document.getElementById('inputText');
+        const outputTextElem = document.getElementById('outputText');
+        const reportOutputElem = document.getElementById('reportOutput');
+        const jsonOutputElem = document.getElementById('jsonOutput');
+        const processButton = document.getElementById('processButton');
+        const demoButton = document.getElementById('demoButton');
+        const fileInput = document.getElementById('fileInput');
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
+
+        // --- Event Listeners ---
+        processButton.addEventListener('click', processText);
+        demoButton.addEventListener('click', loadDemoText);
+        fileInput.addEventListener('change', handleFileUpload);
+
+        // --- Functions ---
+        function loadDemoText() {
+            inputTextElem.value = DEMO_TEXT;
+             fileNameDisplay.textContent = "Demo text loaded"; // Update file display
+             // Optionally clear previous results
+             clearOutputs();
+             console.log("Demo text loaded into input area.");
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                fileNameDisplay.textContent = "No file selected";
+                return;
+            }
+            if (file.type && !file.type.startsWith('text/')) {
+                 alert('Please select a plain text file (.txt).');
+                 fileNameDisplay.textContent = "Invalid file type";
+                 fileInput.value = ''; // Reset file input
+                 return;
+            }
+
+            fileNameDisplay.textContent = `File: ${file.name}`;
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                inputTextElem.value = e.target.result;
+                 // Optionally clear previous results on new file load
+                 clearOutputs();
+                console.log(`File ${file.name} loaded.`);
+            };
+
+            reader.onerror = (e) => {
+                console.error("File reading error:", e);
+                alert(`Error reading file: ${e.target.error}`);
+                fileNameDisplay.textContent = "Error reading file";
+            };
+
+            reader.readAsText(file); // Reads as UTF-8 by default in most modern browsers
+        }
+
+        function clearOutputs() {
+             outputTextElem.value = '';
+             jsonOutputElem.value = '';
+             reportOutputElem.innerHTML = 'Analysis results will appear here after processing...';
+        }
+
+        function processText() {
+            const originalText = inputTextElem.value;
+            if (!originalText) {
+                reportOutputElem.innerHTML = '<p style="color: orange; font-weight: bold;">Input text is empty. Please paste text, upload a file, or load the demo.</p>';
+                clearOutputs(); // Ensure other outputs are also cleared
+                return;
+            }
+
+            reportOutputElem.innerHTML = '<p>Processing... Please wait.</p>'; // Provide feedback
+
+            // Use setTimeout to allow the UI to update before potentially heavy processing
+            setTimeout(() => {
+                try {
+                    console.time('Analysis and Cleaning');
+
+                    const analysisFindings = detectPotentialWatermarks(originalText);
+                    const cleanedText = cleanTextFromWatermarks(originalText);
+                    const humanReportHTML = generateHumanReportHTML(analysisFindings, originalText.length);
+                    const jsonReportString = generateJSONReportString(analysisFindings);
+
+                    outputTextElem.value = cleanedText;
+                    reportOutputElem.innerHTML = humanReportHTML;
+                    jsonOutputElem.value = jsonReportString;
+
+                    console.timeEnd('Analysis and Cleaning');
+
+                } catch (error) {
+                    console.error("Error during processing:", error);
+                    reportOutputElem.innerHTML = `<p style="color: red; font-weight: bold;">An error occurred during processing: ${error.message}</p><p>Check the browser console for more details.</p>`;
+                    // Keep input, clear outputs on error
+                    outputTextElem.value = 'Error during processing.';
+                    jsonOutputElem.value = JSON.stringify({ error: error.message, stack: error.stack }, null, 2);
+                }
+            }, 10); // Small delay (10ms)
+        }
+
+        // --- Detection, Cleaning, Reporting functions (modified slightly for JS) ---
+
+        function detectPotentialWatermarks(originalText) {
+            const findings = {
+                metadata: {
+                    timestamp: new Date().toISOString(),
+                    original_length: originalText.length,
+                    filename: fileNameDisplay.textContent.startsWith('File:') ? fileNameDisplay.textContent.substring(6).trim() : (fileNameDisplay.textContent === "Demo text loaded" ? "Demo Text" : "Pasted Text")
+                },
+                summary: { /* ... counts ... */ },
+                details: { /* ... arrays ... */ }
+            };
+             // Initialize summary counts
+             Object.assign(findings.summary, {
+                 invisible_chars: 0, ascii_control_chars: 0, non_standard_whitespace: 0,
+                 excessive_whitespace_sequences: 0, normalized_chars: 0, total_anomalies_found: 0
+             });
+             // Initialize details arrays
+             Object.assign(findings.details, {
+                 invisible_chars: [], ascii_control_chars: [], non_standard_whitespace: [],
+                 excessive_whitespace_sequences: [], normalized_chars: []
+             });
+
+
+            const textLength = originalText.length;
+
+            for (let i = 0; i < textLength; i++) {
+                const char = originalText[i];
+                const codepoint = `U+${char.charCodeAt(0).toString(16).toUpperCase().padStart(4, '0')}`;
+                let anomalyFound = false;
+
+                if (INVISIBLE_CHARS_TO_REMOVE.has(char) && !(char === '\uFEFF' && i === 0)) {
+                    findings.details.invisible_chars.push({ index: i, char: char, codepoint: codepoint, description: "Known invisible/formatting character" });
+                    anomalyFound = true;
+                }
+                if (ASCII_CONTROL_CHARS_TO_REMOVE.has(char)) {
+                    findings.details.ascii_control_chars.push({ index: i, char: JSON.stringify(char), codepoint: codepoint, description: "Disallowed ASCII control character" });
+                    anomalyFound = true;
+                }
+                if (/\s/.test(char) && !STANDARD_WHITESPACE.has(char)) {
+                    findings.details.non_standard_whitespace.push({ index: i, char: JSON.stringify(char), codepoint: codepoint, description: "Non-standard whitespace character" });
+                    anomalyFound = true;
+                }
+
+                if (!anomalyFound && !/\s/.test(char)) {
+                    try {
+                        const normalizedChar = char.normalize('NFKC');
+                        if (char !== normalizedChar && normalizedChar) {
+                            const isCommonDecomposition = normalizedChar.length > 1 && /^[a-zA-Z0-9 -]+$/.test(normalizedChar);
+                            if (!isCommonDecomposition) {
+                                findings.details.normalized_chars.push({
+                                    index: i, original_char: char, original_codepoint: codepoint,
+                                    normalized_char: normalizedChar,
+                                    normalized_codepoint: [...normalizedChar].map(c => `U+${c.charCodeAt(0).toString(16).toUpperCase().padStart(4, '0')}`).join(' '),
+                                    description: "Character changed by NFKC normalization (potential homoglyph or compatibility char)"
+                                });
+                            }
+                        }
+                    } catch (e) { console.warn(`Normalize failed for char at index ${i}: ${e}`); }
+                }
+            }
+
+            let match;
+            // Reset regex lastIndex before using exec in a loop
+            EXCESSIVE_WHITESPACE_REGEX.lastIndex = 0;
+            while ((match = EXCESSIVE_WHITESPACE_REGEX.exec(originalText)) !== null) {
+                findings.details.excessive_whitespace_sequences.push({
+                    start_index: match.index, end_index: match.index + match[0].length,
+                    sequence: JSON.stringify(match[0]), length: match[0].length,
+                    description: "Sequence of multiple whitespace characters"
+                });
+                 // Prevent infinite loops with zero-width matches (though unlikely with \s{2,})
+                 if (match.index === EXCESSIVE_WHITESPACE_REGEX.lastIndex) {
+                     EXCESSIVE_WHITESPACE_REGEX.lastIndex++;
+                 }
+            }
+
+            // Update Summary Counts
+            findings.summary.invisible_chars = findings.details.invisible_chars.length;
+            findings.summary.ascii_control_chars = findings.details.ascii_control_chars.length;
+            findings.summary.non_standard_whitespace = findings.details.non_standard_whitespace.length;
+            findings.summary.excessive_whitespace_sequences = findings.details.excessive_whitespace_sequences.length;
+            findings.summary.normalized_chars = findings.details.normalized_chars.length;
+            findings.summary.total_anomalies_found = Object.values(findings.details).reduce((sum, arr) => sum + arr.length, 0);
+
+
+            return findings;
+        }
+
+        function cleanTextFromWatermarks(text) {
+             if (!text) return "";
+             let cleanedText = text;
+             let hasInitialBom = text.length > 0 && text[0] === '\uFEFF';
+             if (hasInitialBom) cleanedText = cleanedText.substring(1);
+
+             try { cleanedText = cleanedText.normalize('NFKC'); }
+             catch (e) { console.warn("NFKC Normalization failed:", e); }
+
+             cleanedText = [...cleanedText].filter(char =>
+                 !(INVISIBLE_CHARS_TO_REMOVE.has(char) && char !== '\uFEFF') &&
+                 !ASCII_CONTROL_CHARS_TO_REMOVE.has(char)
+             ).join('');
+
+             cleanedText = cleanedText.replace(WHITESPACE_NORMALIZATION_REGEX, ' ');
+             cleanedText = cleanedText.trim();
+             if (hasInitialBom && cleanedText) cleanedText = '\uFEFF' + cleanedText;
+             return cleanedText;
+        }
+
+        function generateHumanReportHTML(findings, originalLength) {
+            const escapeHtml = (unsafe) => {
+                if (typeof unsafe !== 'string') return unsafe;
+                return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+            };
+
+            let html = `
+                <p><strong>Analysis Complete</strong> for ${escapeHtml(findings.metadata.filename || 'input text')}</p>
+                <p>Original Length: ${originalLength} characters</p>
+                <p>Total Potential Anomalies Found: <strong>${findings.summary.total_anomalies_found}</strong></p>
+                <hr>
+                <h3>Summary Counts:</h3>
+                <ul>
+                    <li>Known Invisible/Formatting Characters: ${findings.summary.invisible_chars}</li>
+                    <li>Disallowed ASCII Control Characters: ${findings.summary.ascii_control_chars}</li>
+                    <li>Non-Standard Whitespace Characters: ${findings.summary.non_standard_whitespace}</li>
+                    <li>Excessive Whitespace Sequences (>=2): ${findings.summary.excessive_whitespace_sequences}</li>
+                    <li>Characters Changed by NFKC Normalization: ${findings.summary.normalized_chars}</li>
+                </ul>`;
+
+            if (findings.summary.total_anomalies_found > 0) {
+                html += `<hr><h3>Detailed Findings:</h3>`;
+                for (const [category, details] of Object.entries(findings.details)) {
+                    if (details.length > 0) {
+                        const categoryTitle = category.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                        html += `<h4>${categoryTitle} (${details.length})</h4><ul>`;
+                        details.forEach(item => {
+                            let charDisplay = item.char ?? item.original_char ?? item.sequence ?? 'N/A';
+                            if (typeof charDisplay === 'string' && (charDisplay.length > 1 || /\s/.test(charDisplay) || ASCII_CONTROL_CHARS_TO_REMOVE.has(charDisplay) || INVISIBLE_CHARS_TO_REMOVE.has(charDisplay))) {
+                                charDisplay = JSON.stringify(charDisplay);
+                            }
+                            charDisplay = escapeHtml(charDisplay);
+
+                            let desc = escapeHtml(item.description || '');
+                            if ('normalized_char' in item) desc += ` (Normalized to: <code>${escapeHtml(JSON.stringify(item.normalized_char))}</code> ${escapeHtml(item.normalized_codepoint)})`;
+                            if ('length' in item) desc += ` (Length: ${item.length})`;
+
+                            html += `<li>
+                                Index: <strong>${item.index ?? item.start_index ?? 'N/A'}</strong> |
+                                Char/Seq: <code>${charDisplay}</code> |
+                                CodePoint: ${escapeHtml(item.codepoint || item.original_codepoint || 'N/A')} |
+                                ${desc}
+                            </li>`;
+                        });
+                        html += `</ul>`;
+                    }
+                }
+            } else {
+                html += `<hr><p><em>No potential watermarking anomalies detected in the input text.</em></p>`;
+            }
+            return html;
+        }
+
+        function generateJSONReportString(findings) {
+            // Ensure metadata is up-to-date
+            findings.metadata.timestamp = new Date().toISOString();
+            return JSON.stringify(findings, null, 2); // Pretty print
+        }
+
+    </script>
+
+</body>
+</html>
